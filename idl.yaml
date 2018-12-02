@@ -1,0 +1,4 @@
+depends:
+  - "platform/user/api-passport/passport.proto"
+  - "platform/user/srv-passport/passport.proto"
+  - "platform/user/srv-info/info.proto"
