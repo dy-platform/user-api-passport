@@ -2,7 +2,7 @@
 // source: passport.proto
 
 /*
-Package platform_user_api_passport is a generated protocol buffer package.
+Package platform_user_srv_passport is a generated protocol buffer package.
 
 It is generated from these files:
 	passport.proto
@@ -18,6 +18,8 @@ It has these top-level messages:
 	UserNameSignInResp
 	TokenSignInReq
 	TokenSignInResp
+	WeChatSignInReq
+	WeChatSignInResp
 	SignOutReq
 	SignOutResp
 	ChangePasswordReq
@@ -29,7 +31,7 @@ It has these top-level messages:
 	UnbindMobileReq
 	UnbindMobileResp
 */
-package platform_user_api_passport
+package platform_user_srv_passport
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
@@ -37,9 +39,9 @@ import math "math"
 import _ "github.com/dy-platform/user-api-passport/idl"
 
 import (
+	context "context"
 	client "github.com/micro/go-micro/client"
 	server "github.com/micro/go-micro/server"
-	context "context"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -68,6 +70,7 @@ type PassportService interface {
 	EmailSignIn(ctx context.Context, in *EmailSignInReq, opts ...client.CallOption) (*EmailSignInResp, error)
 	UserNameSignIn(ctx context.Context, in *UserNameSignInReq, opts ...client.CallOption) (*UserNameSignInResp, error)
 	TokenSignIn(ctx context.Context, in *TokenSignInReq, opts ...client.CallOption) (*TokenSignInResp, error)
+	WeChatSignIn(ctx context.Context, in *WeChatSignInReq, opts ...client.CallOption) (*WeChatSignInResp, error)
 	// 登出
 	SignOut(ctx context.Context, in *SignOutReq, opts ...client.CallOption) (*SignOutResp, error)
 	// 修改/重置密码
@@ -88,7 +91,7 @@ func NewPassportService(name string, c client.Client) PassportService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "platform.user.api.passport"
+		name = "platform.user.srv.passport"
 	}
 	return &passportService{
 		c:    c,
@@ -139,6 +142,16 @@ func (c *passportService) UserNameSignIn(ctx context.Context, in *UserNameSignIn
 func (c *passportService) TokenSignIn(ctx context.Context, in *TokenSignInReq, opts ...client.CallOption) (*TokenSignInResp, error) {
 	req := c.c.NewRequest(c.name, "Passport.TokenSignIn", in)
 	out := new(TokenSignInResp)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *passportService) WeChatSignIn(ctx context.Context, in *WeChatSignInReq, opts ...client.CallOption) (*WeChatSignInResp, error) {
+	req := c.c.NewRequest(c.name, "Passport.WeChatSignIn", in)
+	out := new(WeChatSignInResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -206,6 +219,7 @@ type PassportHandler interface {
 	EmailSignIn(context.Context, *EmailSignInReq, *EmailSignInResp) error
 	UserNameSignIn(context.Context, *UserNameSignInReq, *UserNameSignInResp) error
 	TokenSignIn(context.Context, *TokenSignInReq, *TokenSignInResp) error
+	WeChatSignIn(context.Context, *WeChatSignInReq, *WeChatSignInResp) error
 	// 登出
 	SignOut(context.Context, *SignOutReq, *SignOutResp) error
 	// 修改/重置密码
@@ -223,6 +237,7 @@ func RegisterPassportHandler(s server.Server, hdlr PassportHandler, opts ...serv
 		EmailSignIn(ctx context.Context, in *EmailSignInReq, out *EmailSignInResp) error
 		UserNameSignIn(ctx context.Context, in *UserNameSignInReq, out *UserNameSignInResp) error
 		TokenSignIn(ctx context.Context, in *TokenSignInReq, out *TokenSignInResp) error
+		WeChatSignIn(ctx context.Context, in *WeChatSignInReq, out *WeChatSignInResp) error
 		SignOut(ctx context.Context, in *SignOutReq, out *SignOutResp) error
 		ChangePassword(ctx context.Context, in *ChangePasswordReq, out *ChangePasswordResp) error
 		ResetPassword(ctx context.Context, in *ResetPasswordReq, out *ResetPasswordResp) error
@@ -258,6 +273,10 @@ func (h *passportHandler) UserNameSignIn(ctx context.Context, in *UserNameSignIn
 
 func (h *passportHandler) TokenSignIn(ctx context.Context, in *TokenSignInReq, out *TokenSignInResp) error {
 	return h.PassportHandler.TokenSignIn(ctx, in, out)
+}
+
+func (h *passportHandler) WeChatSignIn(ctx context.Context, in *WeChatSignInReq, out *WeChatSignInResp) error {
+	return h.PassportHandler.WeChatSignIn(ctx, in, out)
 }
 
 func (h *passportHandler) SignOut(ctx context.Context, in *SignOutReq, out *SignOutResp) error {

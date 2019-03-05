@@ -22,7 +22,7 @@ func (h *Handler) SignUp(ctx context.Context, req *api.SignUpReq, rsp *api.SignU
 		Mobile:               req.Mobile,
 		Email:                req.Email,
 		Password:             req.Password,
-		Code:                 req.Code,
+		MsgCode:              req.MsgCode,
 		ActiveType:           0,
 		AppID:                req.AppID,
 		Version:              req.Version,
@@ -38,7 +38,7 @@ func (h *Handler) SignUp(ctx context.Context, req *api.SignUpReq, rsp *api.SignU
 		UserId:               rsp1.UserID,
 		NickName:             "xxx", // 随机生成
 		Gender:               "",
-		AvatarUrl:            "dayan.xxx.xxx",
+		AvatarUrl:            "",
 		UserType:             0,
 	}
 
@@ -52,54 +52,36 @@ func (h *Handler) SignUp(ctx context.Context, req *api.SignUpReq, rsp *api.SignU
 	rsp.UserID = rsp1.UserID
 	rsp.Mobile = rsp1.Mobile
 	rsp.BaseResp = &base.Resp{
-		Code: uint32(base.CODE_SUCESS),
+		Code: int32(base.CODE_OK),
 	}
 
 	return nil
 }
 
-func (h *Handler) MobileSignIn(ctx context.Context, req *api.MobileSignInReq, rsp *api.MobileSignInResp) error {
+func (h *Handler) WeChatSignIn(ctx context.Context, req *api.WeChatSignInReq, rsp *api.WeChatSignInResp) error {
+	rsp.BaseResp = &base.Resp{
+		Code: int32(base.CODE_OK),
+	}
+	cl := passport.NewPassportService("platform.user.srv.passport", kit.Client())
+	req1 := &passport.WeChatSignInReq{
+		DeviceID:             req.DeviceID,
+		Code:                 req.Code,
+		AppID:                req.AppID,
+	}
 
-	return nil
-}
+	rsp1, err := cl.WeChatSignIn(ctx, req1)
+	if err != nil {
+		logrus.Warnf("platform.user.srv.passport WeChatSignIn error:%v", err)
+		return err
+	}
 
-func (h *Handler) EmailSignIn(ctx context.Context, req *api.EmailSignInReq, rsp *api.EmailSignInResp) error {
+	if rsp1.BaseResp.Code != int32(base.CODE_OK) {
+		rsp.BaseResp.Code = rsp1.BaseResp.Code
+		rsp.BaseResp.Msg = rsp1.BaseResp.Msg
+		return nil
+	}
 
-	return nil
-}
-
-func (h *Handler) UserNameSignIn(ctx context.Context, req *api.UserNameSignInReq, rsp *api.UserNameSignInResp) error {
-
-	return nil
-}
-
-func (h *Handler) TokenSignIn(ctx context.Context, req *api.TokenSignInReq, rsp *api.TokenSignInResp) error {
-
-	return nil
-}
-
-func (h *Handler) SignOut(ctx context.Context, req *api.SignOutReq, rsp *api.SignOutResp) error {
-
-	return nil
-}
-
-func (h *Handler) ChangePassword(ctx context.Context, req *api.ChangePasswordReq, rsp *api.ChangePasswordResp) error {
-
-	return nil
-}
-
-
-func (h *Handler) ResetPassword(ctx context.Context, req *api.ResetPasswordReq, rsp *api.ResetPasswordResp) error {
-
-	return nil
-}
-
-func (h *Handler) BindMobile(ctx context.Context, req *api.BindMobileReq, rsp *api.BindMobileResp) error {
-
-	return nil
-}
-
-func (h *Handler) UnbindMobile(ctx context.Context, req *api.UnbindMobileReq, rsp *api.UnbindMobileResp) error {
-
+	//
+	rsp.UserID = rsp1.UserID
 	return nil
 }

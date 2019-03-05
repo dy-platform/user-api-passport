@@ -20,9 +20,9 @@ import math "math"
 import _ "github.com/dy-platform/user-api-passport/idl"
 
 import (
+	context "context"
 	client "github.com/micro/go-micro/client"
 	server "github.com/micro/go-micro/server"
-	context "context"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

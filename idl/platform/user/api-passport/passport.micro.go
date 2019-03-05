@@ -2,7 +2,7 @@
 // source: passport.proto
 
 /*
-Package platform_user_api_passport is a generated protocol buffer package.
+Package platform_user_srv_passport is a generated protocol buffer package.
 
 It is generated from these files:
 	passport.proto
@@ -10,26 +10,10 @@ It is generated from these files:
 It has these top-level messages:
 	SignUpReq
 	SignUpResp
-	MobileSignInReq
-	MobileSignInResp
-	EmailSignInReq
-	EmailSignInResp
-	UserNameSignInReq
-	UserNameSignInResp
-	TokenSignInReq
-	TokenSignInResp
-	SignOutReq
-	SignOutResp
-	ChangePasswordReq
-	ChangePasswordResp
-	ResetPasswordReq
-	ResetPasswordResp
-	BindMobileReq
-	BindMobileResp
-	UnbindMobileReq
-	UnbindMobileResp
+	WeChatSignInReq
+	WeChatSignInResp
 */
-package platform_user_api_passport
+package platform_user_srv_passport
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
@@ -37,9 +21,9 @@ import math "math"
 import _ "github.com/dy-platform/user-api-passport/idl"
 
 import (
+	context "context"
 	client "github.com/micro/go-micro/client"
 	server "github.com/micro/go-micro/server"
-	context "context"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -63,19 +47,8 @@ var _ server.Option
 type PassportService interface {
 	// 注册
 	SignUp(ctx context.Context, in *SignUpReq, opts ...client.CallOption) (*SignUpResp, error)
-	// 登陆
-	MobileSignIn(ctx context.Context, in *MobileSignInReq, opts ...client.CallOption) (*MobileSignInResp, error)
-	EmailSignIn(ctx context.Context, in *EmailSignInReq, opts ...client.CallOption) (*EmailSignInResp, error)
-	UserNameSignIn(ctx context.Context, in *UserNameSignInReq, opts ...client.CallOption) (*UserNameSignInResp, error)
-	TokenSignIn(ctx context.Context, in *TokenSignInReq, opts ...client.CallOption) (*TokenSignInResp, error)
-	// 登出
-	SignOut(ctx context.Context, in *SignOutReq, opts ...client.CallOption) (*SignOutResp, error)
-	// 修改/重置密码
-	ChangePassword(ctx context.Context, in *ChangePasswordReq, opts ...client.CallOption) (*ChangePasswordResp, error)
-	ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...client.CallOption) (*ResetPasswordResp, error)
-	// 绑定/解绑手机
-	BindMobile(ctx context.Context, in *BindMobileReq, opts ...client.CallOption) (*BindMobileResp, error)
-	UnbindMobile(ctx context.Context, in *UnbindMobileReq, opts ...client.CallOption) (*UnbindMobileResp, error)
+	// 微信登陆
+	WeChatSignIn(ctx context.Context, in *WeChatSignInReq, opts ...client.CallOption) (*WeChatSignInResp, error)
 }
 
 type passportService struct {
@@ -88,7 +61,7 @@ func NewPassportService(name string, c client.Client) PassportService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "platform.user.api.passport"
+		name = "platform.user.srv.passport"
 	}
 	return &passportService{
 		c:    c,
@@ -106,89 +79,9 @@ func (c *passportService) SignUp(ctx context.Context, in *SignUpReq, opts ...cli
 	return out, nil
 }
 
-func (c *passportService) MobileSignIn(ctx context.Context, in *MobileSignInReq, opts ...client.CallOption) (*MobileSignInResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.MobileSignIn", in)
-	out := new(MobileSignInResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) EmailSignIn(ctx context.Context, in *EmailSignInReq, opts ...client.CallOption) (*EmailSignInResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.EmailSignIn", in)
-	out := new(EmailSignInResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) UserNameSignIn(ctx context.Context, in *UserNameSignInReq, opts ...client.CallOption) (*UserNameSignInResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.UserNameSignIn", in)
-	out := new(UserNameSignInResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) TokenSignIn(ctx context.Context, in *TokenSignInReq, opts ...client.CallOption) (*TokenSignInResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.TokenSignIn", in)
-	out := new(TokenSignInResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) SignOut(ctx context.Context, in *SignOutReq, opts ...client.CallOption) (*SignOutResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.SignOut", in)
-	out := new(SignOutResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) ChangePassword(ctx context.Context, in *ChangePasswordReq, opts ...client.CallOption) (*ChangePasswordResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.ChangePassword", in)
-	out := new(ChangePasswordResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) ResetPassword(ctx context.Context, in *ResetPasswordReq, opts ...client.CallOption) (*ResetPasswordResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.ResetPassword", in)
-	out := new(ResetPasswordResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) BindMobile(ctx context.Context, in *BindMobileReq, opts ...client.CallOption) (*BindMobileResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.BindMobile", in)
-	out := new(BindMobileResp)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *passportService) UnbindMobile(ctx context.Context, in *UnbindMobileReq, opts ...client.CallOption) (*UnbindMobileResp, error) {
-	req := c.c.NewRequest(c.name, "Passport.UnbindMobile", in)
-	out := new(UnbindMobileResp)
+func (c *passportService) WeChatSignIn(ctx context.Context, in *WeChatSignInReq, opts ...client.CallOption) (*WeChatSignInResp, error) {
+	req := c.c.NewRequest(c.name, "Passport.WeChatSignIn", in)
+	out := new(WeChatSignInResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -201,33 +94,14 @@ func (c *passportService) UnbindMobile(ctx context.Context, in *UnbindMobileReq,
 type PassportHandler interface {
 	// 注册
 	SignUp(context.Context, *SignUpReq, *SignUpResp) error
-	// 登陆
-	MobileSignIn(context.Context, *MobileSignInReq, *MobileSignInResp) error
-	EmailSignIn(context.Context, *EmailSignInReq, *EmailSignInResp) error
-	UserNameSignIn(context.Context, *UserNameSignInReq, *UserNameSignInResp) error
-	TokenSignIn(context.Context, *TokenSignInReq, *TokenSignInResp) error
-	// 登出
-	SignOut(context.Context, *SignOutReq, *SignOutResp) error
-	// 修改/重置密码
-	ChangePassword(context.Context, *ChangePasswordReq, *ChangePasswordResp) error
-	ResetPassword(context.Context, *ResetPasswordReq, *ResetPasswordResp) error
-	// 绑定/解绑手机
-	BindMobile(context.Context, *BindMobileReq, *BindMobileResp) error
-	UnbindMobile(context.Context, *UnbindMobileReq, *UnbindMobileResp) error
+	// 微信登陆
+	WeChatSignIn(context.Context, *WeChatSignInReq, *WeChatSignInResp) error
 }
 
 func RegisterPassportHandler(s server.Server, hdlr PassportHandler, opts ...server.HandlerOption) error {
 	type passport interface {
 		SignUp(ctx context.Context, in *SignUpReq, out *SignUpResp) error
-		MobileSignIn(ctx context.Context, in *MobileSignInReq, out *MobileSignInResp) error
-		EmailSignIn(ctx context.Context, in *EmailSignInReq, out *EmailSignInResp) error
-		UserNameSignIn(ctx context.Context, in *UserNameSignInReq, out *UserNameSignInResp) error
-		TokenSignIn(ctx context.Context, in *TokenSignInReq, out *TokenSignInResp) error
-		SignOut(ctx context.Context, in *SignOutReq, out *SignOutResp) error
-		ChangePassword(ctx context.Context, in *ChangePasswordReq, out *ChangePasswordResp) error
-		ResetPassword(ctx context.Context, in *ResetPasswordReq, out *ResetPasswordResp) error
-		BindMobile(ctx context.Context, in *BindMobileReq, out *BindMobileResp) error
-		UnbindMobile(ctx context.Context, in *UnbindMobileReq, out *UnbindMobileResp) error
+		WeChatSignIn(ctx context.Context, in *WeChatSignInReq, out *WeChatSignInResp) error
 	}
 	type Passport struct {
 		passport
@@ -244,38 +118,6 @@ func (h *passportHandler) SignUp(ctx context.Context, in *SignUpReq, out *SignUp
 	return h.PassportHandler.SignUp(ctx, in, out)
 }
 
-func (h *passportHandler) MobileSignIn(ctx context.Context, in *MobileSignInReq, out *MobileSignInResp) error {
-	return h.PassportHandler.MobileSignIn(ctx, in, out)
-}
-
-func (h *passportHandler) EmailSignIn(ctx context.Context, in *EmailSignInReq, out *EmailSignInResp) error {
-	return h.PassportHandler.EmailSignIn(ctx, in, out)
-}
-
-func (h *passportHandler) UserNameSignIn(ctx context.Context, in *UserNameSignInReq, out *UserNameSignInResp) error {
-	return h.PassportHandler.UserNameSignIn(ctx, in, out)
-}
-
-func (h *passportHandler) TokenSignIn(ctx context.Context, in *TokenSignInReq, out *TokenSignInResp) error {
-	return h.PassportHandler.TokenSignIn(ctx, in, out)
-}
-
-func (h *passportHandler) SignOut(ctx context.Context, in *SignOutReq, out *SignOutResp) error {
-	return h.PassportHandler.SignOut(ctx, in, out)
-}
-
-func (h *passportHandler) ChangePassword(ctx context.Context, in *ChangePasswordReq, out *ChangePasswordResp) error {
-	return h.PassportHandler.ChangePassword(ctx, in, out)
-}
-
-func (h *passportHandler) ResetPassword(ctx context.Context, in *ResetPasswordReq, out *ResetPasswordResp) error {
-	return h.PassportHandler.ResetPassword(ctx, in, out)
-}
-
-func (h *passportHandler) BindMobile(ctx context.Context, in *BindMobileReq, out *BindMobileResp) error {
-	return h.PassportHandler.BindMobile(ctx, in, out)
-}
-
-func (h *passportHandler) UnbindMobile(ctx context.Context, in *UnbindMobileReq, out *UnbindMobileResp) error {
-	return h.PassportHandler.UnbindMobile(ctx, in, out)
+func (h *passportHandler) WeChatSignIn(ctx context.Context, in *WeChatSignInReq, out *WeChatSignInResp) error {
+	return h.PassportHandler.WeChatSignIn(ctx, in, out)
 }
