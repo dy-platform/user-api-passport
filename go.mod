@@ -1,9 +1,11 @@
 module github.com/dy-platform/user-api-passport
 
 require (
-	github.com/dy-gopkg/kit v0.0.0-20181202053321-66d730aa2cf1
-	github.com/dy-platform/user-srv-passport v0.0.0-20181126152616-e139273dbe25
-	github.com/golang/protobuf v1.2.0
-	github.com/micro/go-micro v0.14.1
-	github.com/sirupsen/logrus v1.2.0
+	github.com/dy-gopkg/kit v0.0.0-20190305071224-09d7ea9cbb65
+	github.com/golang/protobuf v1.3.0
+	github.com/micro/go-micro v0.27.0
+	github.com/prometheus/client_golang v0.9.1 // indirect
+	github.com/prometheus/common v0.0.0-20181113130724-41aa239b4cce // indirect
+	github.com/sirupsen/logrus v1.3.0
+	golang.org/x/time v0.0.0-20181108054448-85acf8d2951c // indirect
 )

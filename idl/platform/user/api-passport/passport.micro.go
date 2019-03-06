@@ -2,7 +2,7 @@
 // source: passport.proto
 
 /*
-Package platform_user_srv_passport is a generated protocol buffer package.
+Package platform_user_api_passport is a generated protocol buffer package.
 
 It is generated from these files:
 	passport.proto
@@ -13,7 +13,7 @@ It has these top-level messages:
 	WeChatSignInReq
 	WeChatSignInResp
 */
-package platform_user_srv_passport
+package platform_user_api_passport
 
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
@@ -61,7 +61,7 @@ func NewPassportService(name string, c client.Client) PassportService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "platform.user.srv.passport"
+		name = "platform.user.api.passport"
 	}
 	return &passportService{
 		c:    c,
