@@ -37,7 +37,7 @@ func (h *Handler) SignUp(ctx context.Context, req *api.SignUpReq, rsp *api.SignU
 	req2 := &info.CreateUserReq{
 		UserId:               rsp1.UserID,
 		NickName:             "xxx", // 随机生成
-		Gender:               "",
+		Gender:               base.Gender_Unkonw,
 		AvatarUrl:            "",
 		UserType:             0,
 	}
@@ -81,7 +81,23 @@ func (h *Handler) WeChatSignIn(ctx context.Context, req *api.WeChatSignInReq, rs
 		return nil
 	}
 
-	//
+	//第一次登陆, 添加用户信息
+	if rsp1.IsFirstSignIn {
+		cl2 := info.NewUserInfoService("platform.user.srv.info", kit.Client())
+		req2 := &info.CreateUserReq{
+			UserId:               rsp1.UserID,
+			NickName:             "",
+			Gender:               base.Gender_Unkonw,
+			AvatarUrl:            "",
+			UserType:             0,
+		}
+		_, err = cl2.CreateUser(ctx, req2)
+		if err != nil {
+			logrus.Warnf("platform.user.srv.info CreateUser error:%v", err)
+			return err
+		}
+	}
+
 	rsp.UserID = rsp1.UserID
 	return nil
 }
