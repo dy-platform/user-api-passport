@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/dy-platform/user-api-passport/router"
 	"github.com/dy-gopkg/kit/web"
 )
@@ -13,6 +14,7 @@ func main() {
 	// Register Handler
 	web.DefaultService.Handle("/", r)
 
+	logrus.Debugf("aaaaaaaaaaaaaaaaaaaaa")
 	// Run server
 	web.Run()
 }
