@@ -51,7 +51,6 @@ func WeChatSignIn(c *gin.Context) {
 			NickName:             "",
 			Gender:               base.Gender_Unkonw,
 			AvatarUrl:            "",
-			UserType:             0,
 		}
 		_, err = cl2.CreateUser(c.Request.Context(), req2)
 		if err != nil {

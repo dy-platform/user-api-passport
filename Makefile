@@ -16,7 +16,7 @@ clean:
 	rm -f ${OUTPUT}
 
 release:
-	go build ${LDFLAGS} -o ${OUTPUT} main.go
+	rm -f ${OUTPUT} && CGO_ENABLED=0 go build ${LDFLAGS} -o ${OUTPUT} main.go
 
 docker:
 	docker build --build-arg HOST=$HOST -t platform-${OUTPUT}:latest
