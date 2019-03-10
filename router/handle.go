@@ -10,9 +10,9 @@ import (
 )
 
 type WeChatSignInForm struct {
-	DeviceID int64
-	Code string
-	AppID string
+	DeviceID int64 `json:"deviceID"`
+	Code string `json:"code"`
+	AppID string `json:"appID"`
 }
 
 func WeChatSignIn(c *gin.Context) {
