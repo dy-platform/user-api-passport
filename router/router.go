@@ -11,7 +11,7 @@ func Init() *gin.Engine {
 
 	r := gin.Default()
 
-	r.POST("/wechat-signin", WeChatSignIn)
+	r.POST("/user/passport/wechat-signin", WeChatSignIn)
 
 
 	return  r
