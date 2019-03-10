@@ -9,7 +9,7 @@ BUILD_TIME=`date +%FT%T%z`
 # LDFLAGS=-ldflags "-X main.GitTag=${GITTAG} -X main.BuildTime=${BUILD_TIME}"
 LDFLAGS=-ldflags "-X main.BuildTime=${BUILD_TIME}"
 
-.PHONY:all clean release
+.PHONY:all clean release docker
 all:clean release
 
 clean:
@@ -17,5 +17,8 @@ clean:
 
 release:
 	go build ${LDFLAGS} -o ${OUTPUT} main.go
+
+docker:
+	docker build --build-arg HOST=$HOST -t platform-${OUTPUT}:latest
 
 

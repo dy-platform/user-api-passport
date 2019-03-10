@@ -9,8 +9,9 @@ It is generated from these files:
 
 It has these top-level messages:
 	GetUserInfoReq
-	CommonResp
+	GetUserInfoResp
 	CreateUserReq
+	CreateUserResp
 */
 package platform_user_srv_info
 
@@ -45,8 +46,9 @@ var _ server.Option
 
 type UserInfoService interface {
 	// 查询用户信息
-	GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...client.CallOption) (*CommonResp, error)
-	CreateUser(ctx context.Context, in *CreateUserReq, opts ...client.CallOption) (*CommonResp, error)
+	GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...client.CallOption) (*GetUserInfoResp, error)
+	// 创建用户
+	CreateUser(ctx context.Context, in *CreateUserReq, opts ...client.CallOption) (*CreateUserResp, error)
 }
 
 type userInfoService struct {
@@ -67,9 +69,9 @@ func NewUserInfoService(name string, c client.Client) UserInfoService {
 	}
 }
 
-func (c *userInfoService) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...client.CallOption) (*CommonResp, error) {
+func (c *userInfoService) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...client.CallOption) (*GetUserInfoResp, error) {
 	req := c.c.NewRequest(c.name, "UserInfo.GetUserInfo", in)
-	out := new(CommonResp)
+	out := new(GetUserInfoResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -77,9 +79,9 @@ func (c *userInfoService) GetUserInfo(ctx context.Context, in *GetUserInfoReq, o
 	return out, nil
 }
 
-func (c *userInfoService) CreateUser(ctx context.Context, in *CreateUserReq, opts ...client.CallOption) (*CommonResp, error) {
+func (c *userInfoService) CreateUser(ctx context.Context, in *CreateUserReq, opts ...client.CallOption) (*CreateUserResp, error) {
 	req := c.c.NewRequest(c.name, "UserInfo.CreateUser", in)
-	out := new(CommonResp)
+	out := new(CreateUserResp)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -91,14 +93,15 @@ func (c *userInfoService) CreateUser(ctx context.Context, in *CreateUserReq, opt
 
 type UserInfoHandler interface {
 	// 查询用户信息
-	GetUserInfo(context.Context, *GetUserInfoReq, *CommonResp) error
-	CreateUser(context.Context, *CreateUserReq, *CommonResp) error
+	GetUserInfo(context.Context, *GetUserInfoReq, *GetUserInfoResp) error
+	// 创建用户
+	CreateUser(context.Context, *CreateUserReq, *CreateUserResp) error
 }
 
 func RegisterUserInfoHandler(s server.Server, hdlr UserInfoHandler, opts ...server.HandlerOption) error {
 	type userInfo interface {
-		GetUserInfo(ctx context.Context, in *GetUserInfoReq, out *CommonResp) error
-		CreateUser(ctx context.Context, in *CreateUserReq, out *CommonResp) error
+		GetUserInfo(ctx context.Context, in *GetUserInfoReq, out *GetUserInfoResp) error
+		CreateUser(ctx context.Context, in *CreateUserReq, out *CreateUserResp) error
 	}
 	type UserInfo struct {
 		userInfo
@@ -111,10 +114,10 @@ type userInfoHandler struct {
 	UserInfoHandler
 }
 
-func (h *userInfoHandler) GetUserInfo(ctx context.Context, in *GetUserInfoReq, out *CommonResp) error {
+func (h *userInfoHandler) GetUserInfo(ctx context.Context, in *GetUserInfoReq, out *GetUserInfoResp) error {
 	return h.UserInfoHandler.GetUserInfo(ctx, in, out)
 }
 
-func (h *userInfoHandler) CreateUser(ctx context.Context, in *CreateUserReq, out *CommonResp) error {
+func (h *userInfoHandler) CreateUser(ctx context.Context, in *CreateUserReq, out *CreateUserResp) error {
 	return h.UserInfoHandler.CreateUser(ctx, in, out)
 }
