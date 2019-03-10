@@ -1,0 +1,14 @@
+registry:
+  address: $REGISTRY_CENTER
+
+service:
+  address: 127.0.0.1:9999
+  name: user-api-passport
+  version: v1.0.0
+  metadata:
+    id: "1"
+
+log:
+  path: log
+  level: debug
+  fileSize: 1024000
