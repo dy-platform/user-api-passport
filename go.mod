@@ -1,7 +1,7 @@
 module github.com/dy-platform/user-api-passport
 
 require (
-	github.com/dy-gopkg/kit v0.0.0-20190310045719-365f51b2c4bd
+	github.com/dy-gopkg/kit v0.0.0-20190310081446-1ce7c302bfdb
 	github.com/gin-gonic/gin v1.1.1
 	github.com/golang/protobuf v1.3.0
 	github.com/manucorporat/sse v0.0.0-20160126180136-ee05b128a739 // indirect

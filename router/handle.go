@@ -1,18 +1,18 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/micro/go-micro/client"
 	"github.com/dy-platform/user-api-passport/idl"
 	info "github.com/dy-platform/user-api-passport/idl/platform/user/srv-info"
 	passport "github.com/dy-platform/user-api-passport/idl/platform/user/srv-passport"
+	"github.com/gin-gonic/gin"
+	"github.com/micro/go-micro/client"
 	"github.com/sirupsen/logrus"
 )
 
 type WeChatSignInForm struct {
-	DeviceID int64 `json:"deviceID"`
-	Code string `json:"code"`
-	AppID string `json:"appID"`
+	DeviceID int64  ` json:"deviceID"  `
+	Code     string ` json:"code"   binding:"required"`
+	AppID    string `json:"appID"   binding:"required"`
 }
 
 func WeChatSignIn(c *gin.Context) {
@@ -21,14 +21,15 @@ func WeChatSignIn(c *gin.Context) {
 	err := c.Bind(&req)
 	if err != nil {
 		c.JSON(500, err)
+		logrus.Errorf("gin.Context.Bind error:%v", err)
 		return
 	}
 
 	cl := passport.NewPassportService("platform.user.srv.passport", client.DefaultClient)
 	req1 := &passport.WeChatSignInReq{
-		DeviceID:             req.DeviceID,
-		Code:                 req.Code,
-		AppID:                req.AppID,
+		DeviceID: req.DeviceID,
+		Code:     req.Code,
+		AppID:    req.AppID,
 	}
 
 	rsp1, err := cl.WeChatSignIn(c.Request.Context(), req1)
@@ -47,10 +48,10 @@ func WeChatSignIn(c *gin.Context) {
 	if rsp1.IsFirstSignIn {
 		cl2 := info.NewUserInfoService("platform.user.srv.info", client.DefaultClient)
 		req2 := &info.CreateUserReq{
-			UserId:               rsp1.UserID,
-			NickName:             "",
-			Gender:               base.Gender_Unkonw,
-			AvatarUrl:            "",
+			UserId:    rsp1.UserID,
+			NickName:  "",
+			Gender:    base.Gender_Unkonw,
+			AvatarUrl: "",
 		}
 		_, err = cl2.CreateUser(c.Request.Context(), req2)
 		if err != nil {
@@ -61,7 +62,7 @@ func WeChatSignIn(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"status":200,
-		"userID":rsp1.UserID,
+		"status": 200,
+		"userID": rsp1.UserID,
 	})
 }

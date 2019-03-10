@@ -1,5 +1,5 @@
 # This is how we want to name the binary output
-OUTPUT=user-api-passport
+TARGET=platform-user-api-passport
 
 # These are the values we want to pass for Version and BuildTime
 GITTAG=`git describe --tags`
@@ -13,12 +13,12 @@ LDFLAGS=-ldflags "-X main.BuildTime=${BUILD_TIME}"
 all:clean release
 
 clean:
-	rm -f ${OUTPUT}
+	rm -f ${TARGET}
 
 release:
-	rm -f ${OUTPUT} && CGO_ENABLED=0 go build ${LDFLAGS} -o ${OUTPUT} main.go
+	rm -f ${TARGET} && CGO_ENABLED=0 go build ${LDFLAGS} -o ${TARGET} main.go
 
 docker:
-	docker build --build-arg CONFIG_HOST=$CONFIG_HOST -t platform-${OUTPUT}:latest
+	docker build --build-arg CONFIG_HOST=$CONFIG_HOST TARGET=$TARGET -t $TARGET:latest
 
 
