@@ -1,5 +1,5 @@
 registry:
-  address: $REGISTRY_CENTER
+  address: $REGISTRY_HOST
 
 service:
   address: 0.0.0.0:9999
